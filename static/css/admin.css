@@ -251,74 +251,67 @@ ul.messagelist li.error   { border-left-color: #ef4444; }
 
 /* ==========================================================================
    9. RESPONSIVE Y DISTRIBUCIÓN (Escritorio, Tablet y Móvil)
+   Notas:
+   - Django carga su responsive.css DESPUÉS de este archivo. Por eso aquí se
+     usan selectores más específicos (p. ej. ".dashboard #content-related")
+     y así estas reglas ganan sin abusar de !important.
+   - Django ya ajusta por su cuenta el relleno de #content, la cabecera y las
+     migas de pan en tablet y móvil, así que no se repite aquí.
    ========================================================================== */
 
-/* --- ESCRITORIO (Diseño limpio de tarjetas) --- */
-@media (min-width: 1025px) {
-  #content-main {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 24px;
-    width: 100% !important;
-    max-width: 100% !important;
-    float: none !important;
-    margin: 0 !important;
-  }
+/* --- 9.1 Inicio del admin: módulos como tarjetas (todos los tamaños) --- */
+/* Django fija el contenido del inicio en 600px y reserva 300px a la derecha
+   para "Acciones recientes"; se anulan para que las tarjetas usen todo el ancho. */
+.dashboard #content { width: auto; }
+.dashboard .colMS { margin-right: 0; }
 
-  #content-main .module {
-    width: 100% !important;
-    margin: 0 !important;
-    display: flex;
-    flex-direction: column;
-    transition: transform 180ms ease, box-shadow 180ms ease;
-  }
-
-  #content-main .module:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgb(0 0 0 / 25%);
-  }
-
-  #content-related {
-    width: 100% !important;
-    float: none !important;
-    margin: 24px 0 0 0 !important;
-  }
+/* ".app-list" existe solo en el inicio: el listado y los formularios no se tocan */
+#content-main.app-list {
+  display: grid;
+  /* min(340px, 100%) evita desbordar en pantallas de menos de 340px */
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: 24px;
+  align-items: start;
+  float: none;
+  width: auto;
 }
 
-/* --- TABLET Y MÓVIL (Adaptación sin romper nada) --- */
+#content-main.app-list .module {
+  margin: 0; /* el espaciado lo da el gap del grid */
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+#content-main.app-list .module:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 25%);
+}
+
+/* "Acciones recientes" pasa debajo de las tarjetas */
+.dashboard #content-related {
+  float: none;
+  width: auto;
+  margin: 24px 0 0;
+}
+
+
+/* --- 9.2 TABLET Y MÓVIL (hasta 1024px) --- */
 @media (max-width: 1024px) {
-  /* Quitamos la barra lateral para que el contenido use todo el espacio */
-  #nav-sidebar { display: none !important; }
+  /* Sin barra lateral: el contenido usa todo el ancho (y se oculta su botón) */
+  #nav-sidebar,
+  #toggle-nav-sidebar { display: none !important; }
 
-  /* Contenedores al 100% */
-  #container, #main, #content, #content-main, #content-related {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 16px !important;
-    box-sizing: border-box !important;
-    float: none !important;
-    display: block !important;
-  }
+  /* Listado: Django ya da scroll horizontal a ".results"; así las columnas no se aplastan */
+  #result_list { white-space: nowrap; }
 
-  /* Tablas con scroll horizontal interno (no rompe la página) */
-  .module table, #result_list {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
-  }
-
-  /* Botones superiores al 100% */
-  .object-tools { display: flex; flex-wrap: wrap; width: 100%; gap: 8px; margin: 0 0 16px 0; }
+  /* Botones superiores ("Añadir cliente") a lo ancho */
+  .object-tools { float: none; display: flex; flex-wrap: wrap; width: 100%; gap: 8px; margin: 0 0 16px; }
   .object-tools li { margin: 0; }
   .object-tools a { display: block; padding: 10px 14px; text-align: center; }
 
-  /* Formularios: etiquetas arriba, inputs abajo al 100% */
+  /* Formularios: etiquetas arriba, campos abajo al 100% */
   .aligned .form-row { display: block !important; padding-bottom: 16px; }
   .aligned label { display: block !important; width: 100% !important; text-align: left !important; margin-bottom: 8px !important; }
-  
+
   .aligned .form-row input[type="text"],
   .aligned .form-row input[type="password"],
   .aligned .form-row input[type="email"],
@@ -329,7 +322,7 @@ ul.messagelist li.error   { border-left-color: #ef4444; }
     box-sizing: border-box !important;
   }
 
-  /* Selectores de permisos apilados al 100% */
+  /* Selectores de permisos (Usuarios y Grupos) apilados al 100% */
   .selector { display: flex !important; flex-direction: column !important; width: 100% !important; }
   .selector-available, .selector-chosen { width: 100% !important; max-width: 100% !important; margin: 0 0 16px 0 !important; }
   .selector select { width: 100% !important; overflow-x: auto !important; white-space: nowrap !important; }
@@ -340,22 +333,22 @@ ul.messagelist li.error   { border-left-color: #ef4444; }
   .submit-row input, .submit-row a { width: 100% !important; text-align: center !important; padding: 12px !important; }
 }
 
-/* --- MÓVIL PEQUEÑO --- */
+
+/* --- 9.3 MÓVIL PEQUEÑO (hasta 600px) --- */
 @media (max-width: 600px) {
-  #header { display: flex; flex-wrap: wrap; justify-content: space-between; padding: 10px 12px; }
-  #branding h1 { font-size: 1.1rem; margin-bottom: 6px; }
+  #site-name { font-size: 1.1rem; }
   #user-tools { font-size: 0.75rem; letter-spacing: 0; }
-  div.breadcrumbs { padding: 8px 12px; font-size: 0.8rem; }
-  
-  /* Evitar el zoom automático en iPhone al tocar un input */
+
+  /* Evita el zoom automático de iPhone al tocar un campo */
   :is(input[type="text"], input[type="email"], input[type="password"],
       input[type="number"], input[type="tel"], input[type="search"],
       input[type="date"], input[type="time"], textarea, select) {
-    font-size: 16px !important; 
+    font-size: 16px !important;
   }
 }
 
-/* Accesibilidad */
+
+/* Accesibilidad: movimiento reducido */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }

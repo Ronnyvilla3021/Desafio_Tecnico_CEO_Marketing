@@ -1,0 +1,63 @@
+name: CI
+
+# Se ejecuta en cada push (a cualquier rama) y en cada pull request
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+# Si llega un push nuevo a la misma rama, cancela la ejecución anterior
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Valores de prueba: no son secretos reales
+  DJANGO_SECRET_KEY: clave-solo-para-integracion-continua
+  DJANGO_DEBUG: "False"
+  DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+
+jobs:
+  test:
+    name: Revisar y probar Django
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Revisar el proyecto (manage.py check)
+        run: python manage.py check
+
+      - name: Verificar que no falten migraciones
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Recopilar archivos estáticos
+        run: python manage.py collectstatic --noinput
+
+      - name: Ejecutar pruebas
+        run: python manage.py test
+
+  docker:
+    name: Construir imagen Docker
+    runs-on: ubuntu-latest
+    needs: test   # solo se ejecuta si el job anterior terminó bien
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Validar docker-compose.yml
+        run: docker compose config --quiet
+
+      - name: Construir la imagen
+        run: docker build --tag mini-crm:ci .

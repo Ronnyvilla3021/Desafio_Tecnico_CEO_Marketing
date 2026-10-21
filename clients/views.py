@@ -13,7 +13,9 @@ def _serialize(client):
     """Convierte un cliente a diccionario para respuestas JSON."""
     return {
         "id": client.pk,
-        "name": client.name,
+        "first_name": client.first_name,
+        "last_name": client.last_name,
+        "full_name": client.full_name,
         "company": client.company,
         "email": client.email,
         "phone": client.phone,
@@ -37,8 +39,12 @@ def client_list(request):
     status = request.GET.get("status", "").strip()
 
     clients = Client.objects.all()
-    if query:
-        clients = clients.filter(Q(name__icontains=query) | Q(company__icontains=query))
+    # Cada palabra debe aparecer en nombre, apellido o empresa.
+    # Así "juan perez" encuentra a Juan Pérez aunque estén en campos distintos.
+    for term in query.split():
+        clients = clients.filter(
+            Q(first_name__icontains=term) | Q(last_name__icontains=term) | Q(company__icontains=term)
+        )
     if status in Client.Status.values:
         clients = clients.filter(status=status)
 
@@ -72,7 +78,7 @@ def client_create(request):
     form = ClientForm(request.POST)
     if form.is_valid():
         client = form.save()
-        message = f"Cliente «{client.name}» registrado correctamente."
+        message = f"Cliente {client.full_name} registrado correctamente."
         messages.success(request, message)
         return JsonResponse({"ok": True, "message": message, "client": _serialize(client)}, status=201)
     return JsonResponse(
@@ -86,7 +92,7 @@ def client_update(request, pk):
     form = ClientForm(request.POST, instance=client)
     if form.is_valid():
         client = form.save()
-        message = f"Cliente «{client.name}» actualizado correctamente."
+        message = f"Cliente {client.full_name} actualizado correctamente."
         messages.success(request, message)
         return JsonResponse({"ok": True, "message": message, "client": _serialize(client)})
     return JsonResponse(
@@ -97,8 +103,8 @@ def client_update(request, pk):
 @require_POST
 def client_delete(request, pk):
     client = get_object_or_404(Client, pk=pk)
-    name = client.name
+    full_name = client.full_name
     client.delete()
-    message = f"Cliente «{name}» eliminado correctamente."
+    message = f"Cliente {full_name} eliminado correctamente."
     messages.success(request, message)
     return JsonResponse({"ok": True, "message": message})

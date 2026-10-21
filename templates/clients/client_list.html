@@ -110,16 +110,17 @@
         {% for client in clients %}
         <tr data-client-row
             data-id="{{ client.pk }}"
-            data-name="{{ client.name }}"
+            data-first-name="{{ client.first_name }}"
+            data-last-name="{{ client.last_name }}"
+            data-full-name="{{ client.full_name }}"
             data-company="{{ client.company }}"
             data-email="{{ client.email }}"
             data-phone="{{ client.phone }}"
-            data-status="{{ client.status }}"
-            data-search="{{ client.name|lower }} {{ client.company|lower }}">
+            data-status="{{ client.status }}">
           <td data-label="Cliente">
             <div class="person">
-              <span class="avatar" aria-hidden="true">{{ client.name|slice:":1"|upper }}</span>
-              <span class="person__name">{{ client.name }}</span>
+              <span class="avatar" aria-hidden="true">{{ client.first_name|slice:":1"|upper }}</span>
+              <span class="person__name">{{ client.full_name }}</span>
             </div>
           </td>
           <td data-label="Empresa">{{ client.company|default:"—" }}</td>
@@ -132,12 +133,12 @@
             <div class="row-actions">
               <button type="button" class="icon-btn" data-action="edit"
                       data-url="{% url 'clients:update' client.pk %}"
-                      aria-label="Editar a {{ client.name }}" title="Editar">
+                      aria-label="Editar a {{ client.full_name }}" title="Editar">
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
               </button>
               <button type="button" class="icon-btn icon-btn--danger" data-action="delete"
                       data-url="{% url 'clients:delete' client.pk %}"
-                      aria-label="Eliminar a {{ client.name }}" title="Eliminar">
+                      aria-label="Eliminar a {{ client.full_name }}" title="Eliminar">
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m6 6 1 14h10l1-14"/></svg>
               </button>
             </div>

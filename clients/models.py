@@ -16,8 +16,15 @@ class Client(models.Model):
         CLIENT = "cliente", "Cliente"
         INACTIVE = "inactivo", "Inactivo"
 
-    name = models.CharField(
-        "nombre", max_length=120, validators=[MinLengthValidator(2, "El nombre debe tener al menos 2 caracteres.")]
+    first_name = models.CharField(
+        "nombre",
+        max_length=60,
+        validators=[MinLengthValidator(2, "El nombre debe tener al menos 2 caracteres.")],
+    )
+    last_name = models.CharField(
+        "apellido",
+        max_length=60,
+        validators=[MinLengthValidator(2, "El apellido debe tener al menos 2 caracteres.")],
     )
     company = models.CharField("empresa", max_length=120, blank=True)
     email = models.EmailField(
@@ -35,5 +42,10 @@ class Client(models.Model):
         verbose_name = "cliente"
         verbose_name_plural = "clientes"
 
+    @property
+    def full_name(self):
+        """Nombre completo para mostrar en pantalla."""
+        return f"{self.first_name} {self.last_name}".strip()
+
     def __str__(self):
-        return f"{self.name} ({self.company})" if self.company else self.name
+        return f"{self.full_name} ({self.company})" if self.company else self.full_name

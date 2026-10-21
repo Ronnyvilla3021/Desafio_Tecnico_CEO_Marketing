@@ -10,8 +10,12 @@ admin.site.index_title = "Administración de clientes"
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("name", "company", "email", "phone", "status", "created_at")
+    list_display = ("full_name", "company", "email", "phone", "status", "created_at")
     list_filter = ("status", "created_at")
-    search_fields = ("name", "company", "email")
+    search_fields = ("first_name", "last_name", "company", "email")
     readonly_fields = ("created_at", "updated_at")
     list_per_page = 20
+
+    @admin.display(description="Cliente", ordering="first_name")
+    def full_name(self, obj):
+        return obj.full_name

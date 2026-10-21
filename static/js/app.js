@@ -184,7 +184,10 @@
 
 
   /* 5. MODAL DE CREAR / EDITAR ------------------------------------------- */
-  const FIELDS = ["name", "company", "email", "phone", "status"];
+  const FIELDS = ["first_name", "last_name", "company", "email", "phone", "status"];
+
+  /** "first_name" -> "firstName": así lee JavaScript los atributos data-first-name. */
+  const toDatasetKey = (field) => field.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
 
   function initClientModal() {
     const modal = $("#client-modal");
@@ -211,19 +214,20 @@
       title.textContent = "Nuevo cliente";
       $(".btn__label", submitButton).textContent = "Guardar cliente";
       modal.showModal();
-      getField("name").focus();
+      getField("first_name")?.focus();
     }
 
     function openEdit(row, updateUrl) {
       resetForm();
       currentAction = updateUrl;
       FIELDS.forEach((field) => {
-        getField(field).value = row.dataset[field] ?? "";
+        const input = getField(field);
+        if (input) input.value = row.dataset[toDatasetKey(field)] ?? "";
       });
       title.textContent = "Editar cliente";
       $(".btn__label", submitButton).textContent = "Guardar cambios";
       modal.showModal();
-      getField("name").focus();
+      getField("first_name")?.focus();
     }
 
     // Nuevo cliente
@@ -307,12 +311,16 @@
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const PHONE_PATTERN = /^\+?\d{7,15}$/;
 
+  /** Valida nombre o apellido: obligatorio y de al menos 2 caracteres. */
+  const nameValidator = (label) => (value) => {
+    if (!value) return `El ${label} es obligatorio.`;
+    return value.length < 2 ? `El ${label} debe tener al menos 2 caracteres.` : "";
+  };
+
   // Mismas reglas que el backend (models.py / forms.py)
   const validators = {
-    name: (value) => {
-      if (!value) return "El nombre es obligatorio.";
-      return value.length < 2 ? "El nombre debe tener al menos 2 caracteres." : "";
-    },
+    first_name: nameValidator("nombre"),
+    last_name: nameValidator("apellido"),
     company: () => "",
     email: (value) => {
       if (!value) return "El correo electrónico es obligatorio.";
@@ -375,7 +383,7 @@
 
       const row = button.closest("[data-client-row]");
       pending = { url: button.dataset.url, row };
-      text.textContent = `Vas a eliminar a «${row.dataset.name}». Esta acción no se puede deshacer.`;
+      text.textContent = `Vas a eliminar a ${row.dataset.fullName}. Esta acción no se puede deshacer.`;
       modal.showModal();
       $("[data-close-modal]", modal).focus(); // foco en "Cancelar": acción segura
     });

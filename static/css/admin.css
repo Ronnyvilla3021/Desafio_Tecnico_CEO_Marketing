@@ -1,0 +1,361 @@
+/* ==========================================================================
+   Mini CRM · Django Admin — tema oscuro negro y dorado
+   Índice:
+   1. Paleta y variables        5. Formularios y botones
+   2. Cabecera y navegación     6. Mensajes
+   3. Módulos y tablas          7. Insignias de estado
+   4. Lista de clientes         8. Inicio de sesión
+                                9. Responsive (Desktop, Tablet y Móvil)
+   ========================================================================== */
+
+
+/* 1. PALETA Y VARIABLES -------------------------------------------------- */
+:root,
+html[data-theme="light"],
+html[data-theme="dark"],
+html:not([data-theme]) {
+  color-scheme: dark; 
+
+  --crm-gold: #c9a227;
+  --crm-gold-hover: #b8921c;
+  --crm-gold-light: #e6c766;
+  --crm-black: #0f0f12;
+  --crm-surface: #17171c;
+  --crm-surface-2: #1f1f26;
+  --crm-line: #2b2b34;
+  --crm-text: #e7e4dc;
+  --crm-muted: #9a9aa5;
+  --crm-hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+
+  --primary: var(--crm-surface-2);
+  --primary-fg: var(--crm-text);
+  --secondary: var(--crm-black);
+  --accent: var(--crm-gold-light);
+  --body-fg: var(--crm-text);
+  --body-bg: var(--crm-black);
+  --body-quiet-color: var(--crm-muted);
+  --body-medium-color: #c9c6bd;
+  --body-loud-color: #ffffff;
+  --header-color: var(--crm-text);
+  --header-branding-color: #ffffff;
+  --header-bg: var(--crm-black);
+  --header-link-color: var(--crm-text);
+  --breadcrumbs-fg: var(--crm-muted);
+  --breadcrumbs-link-fg: var(--crm-gold-light);
+  --breadcrumbs-bg: var(--crm-surface);
+  --link-fg: var(--crm-gold-light);
+  --link-hover-color: #ffffff;
+  --link-selected-fg: var(--crm-gold);
+  --hairline-color: var(--crm-line);
+  --border-color: #3a3a44;
+  --error-fg: #f87171;
+  --message-success-bg: #14301f;
+  --message-warning-bg: #3a2f0b;
+  --message-error-bg: #3b1515;
+  --darkest-bg: #0b0b0e;
+  --darker-bg: var(--crm-surface-2);
+  --medium-bg: var(--crm-surface-2);
+  --light-bg: var(--crm-surface);
+  --selected-bg: #2a2a33;
+  --selected-row: rgb(201 162 39 / 14%);
+
+  --button-fg: var(--crm-black);
+  --button-bg: var(--crm-gold);
+  --button-hover-bg: var(--crm-gold-hover);
+  --default-button-bg: var(--crm-gold);
+  --default-button-hover-bg: var(--crm-gold-hover);
+  --close-button-bg: #d9d5c9;
+  --close-button-hover-bg: #ffffff;
+  --delete-button-bg: #dc2626;
+  --delete-button-hover-bg: #b91c1c;
+  --object-tools-fg: var(--crm-black);
+  --object-tools-bg: var(--crm-gold);
+  --object-tools-hover-bg: var(--crm-gold-hover);
+
+  --font-family-primary: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+
+/* 2. CABECERA Y NAVEGACIÓN ----------------------------------------------- */
+html { scrollbar-color: #3a3a44 var(--crm-black); }
+body { font-family: var(--font-family-primary); }
+.theme-toggle { display: none !important; }
+
+#header { border-bottom: 2px solid var(--crm-gold); }
+#site-name { font-family: "Montserrat", var(--font-family-primary); font-weight: 700; }
+#site-name a { display: inline-flex; align-items: center; gap: 12px; }
+
+#site-name a::before {
+  content: "C";
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 38px;
+  clip-path: var(--crm-hex);
+  background: var(--crm-gold);
+  color: var(--crm-black);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+#user-tools { letter-spacing: 0.06em; }
+#user-tools a:hover { color: var(--crm-gold-light); }
+div.breadcrumbs { border-bottom: 1px solid var(--crm-line); }
+
+#content > h1 {
+  font-family: "Montserrat", var(--font-family-primary);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--crm-text);
+}
+
+#content > h1::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background: var(--crm-gold);
+}
+
+#nav-sidebar {
+  background: var(--crm-surface);
+  border-right: 1px solid var(--crm-line);
+}
+
+
+/* 3. MÓDULOS Y TABLAS ---------------------------------------------------- */
+.module[class*="app-"],
+#recent-actions-module,
+fieldset.module {
+  background: var(--crm-surface);
+  border: 1px solid var(--crm-line);
+  border-radius: 12px;
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+  padding: 12px 16px;
+  background: var(--crm-surface-2);
+  color: var(--crm-gold-light);
+  border-bottom: 1px solid var(--crm-line);
+  border-radius: 11px 11px 0 0;
+  font-family: "Montserrat", var(--font-family-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+thead th,
+tfoot td {
+  background: var(--crm-surface-2);
+  color: var(--crm-muted);
+  letter-spacing: 0.06em;
+}
+
+
+/* 4. LISTA DE CLIENTES --------------------------------------------------- */
+#changelist tbody tr:hover :is(td, th) { background: rgb(201 162 39 / 9%); }
+
+#changelist-filter {
+  overflow: hidden;
+  background: var(--crm-surface);
+  border: 1px solid var(--crm-line);
+  border-radius: 12px;
+}
+
+
+/* 5. FORMULARIOS Y BOTONES ----------------------------------------------- */
+:is(input[type="text"], input[type="email"], input[type="password"], input[type="url"],
+    input[type="number"], input[type="tel"], input[type="search"], input[type="date"],
+    input[type="time"], textarea, select) {
+  min-height: 38px;
+  padding: 8px 10px;
+  background: var(--crm-black);
+  color: var(--crm-text);
+  border: 1px solid #3a3a44;
+  border-radius: 8px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+:is(input[type="text"], input[type="email"], input[type="password"], input[type="url"],
+    input[type="number"], input[type="tel"], input[type="search"], input[type="date"],
+    input[type="time"], textarea, select):focus {
+  outline: none;
+  border-color: var(--crm-gold);
+  box-shadow: 0 0 0 4px rgb(201 162 39 / 18%);
+}
+
+input[type="checkbox"], input[type="radio"] { accent-color: var(--crm-gold); }
+
+.button, a.button, input[type="submit"], input[type="button"], .submit-row input {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 180ms ease;
+}
+
+.submit-row a.deletelink, a.deletelink:link, a.deletelink:visited {
+  border-radius: 8px;
+  color: #ffffff;
+}
+
+.object-tools a { font-weight: 600; letter-spacing: 0.04em; }
+:focus-visible { outline: 3px solid rgb(201 162 39 / 45%); outline-offset: 2px; }
+
+
+/* 6. MENSAJES ------------------------------------------------------------ */
+ul.messagelist li { border-radius: 8px; border-left: 4px solid var(--crm-gold); }
+ul.messagelist li.success { border-left-color: #22c55e; }
+ul.messagelist li.warning { border-left-color: #f59e0b; }
+ul.messagelist li.error   { border-left-color: #ef4444; }
+
+
+/* 7. INSIGNIAS DE ESTADO ------------------------------------------------- */
+.crm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.crm-badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.crm-badge--prospecto { background: rgb(245 158 11 / 16%); color: #f5c451; }
+.crm-badge--cliente   { background: rgb(34 197 94 / 16%);  color: #4ade80; }
+.crm-badge--inactivo  { background: rgb(154 154 165 / 18%); color: #b8b8c2; }
+
+
+/* 8. INICIO DE SESIÓN ---------------------------------------------------- */
+.login #container {
+  overflow: hidden;
+  background: var(--crm-surface);
+  border: 1px solid var(--crm-line);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 45%);
+}
+
+
+/* ==========================================================================
+   9. RESPONSIVE Y DISTRIBUCIÓN (Escritorio, Tablet y Móvil)
+   ========================================================================== */
+
+/* --- ESCRITORIO (Diseño limpio de tarjetas) --- */
+@media (min-width: 1025px) {
+  #content-main {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+  }
+
+  #content-main .module {
+    width: 100% !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  #content-main .module:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 25%);
+  }
+
+  #content-related {
+    width: 100% !important;
+    float: none !important;
+    margin: 24px 0 0 0 !important;
+  }
+}
+
+/* --- TABLET Y MÓVIL (Adaptación sin romper nada) --- */
+@media (max-width: 1024px) {
+  /* Quitamos la barra lateral para que el contenido use todo el espacio */
+  #nav-sidebar { display: none !important; }
+
+  /* Contenedores al 100% */
+  #container, #main, #content, #content-main, #content-related {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+    float: none !important;
+    display: block !important;
+  }
+
+  /* Tablas con scroll horizontal interno (no rompe la página) */
+  .module table, #result_list {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* Botones superiores al 100% */
+  .object-tools { display: flex; flex-wrap: wrap; width: 100%; gap: 8px; margin: 0 0 16px 0; }
+  .object-tools li { margin: 0; }
+  .object-tools a { display: block; padding: 10px 14px; text-align: center; }
+
+  /* Formularios: etiquetas arriba, inputs abajo al 100% */
+  .aligned .form-row { display: block !important; padding-bottom: 16px; }
+  .aligned label { display: block !important; width: 100% !important; text-align: left !important; margin-bottom: 8px !important; }
+  
+  .aligned .form-row input[type="text"],
+  .aligned .form-row input[type="password"],
+  .aligned .form-row input[type="email"],
+  .aligned .form-row select,
+  .aligned .form-row textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Selectores de permisos apilados al 100% */
+  .selector { display: flex !important; flex-direction: column !important; width: 100% !important; }
+  .selector-available, .selector-chosen { width: 100% !important; max-width: 100% !important; margin: 0 0 16px 0 !important; }
+  .selector select { width: 100% !important; overflow-x: auto !important; white-space: nowrap !important; }
+  .selector-chooser { flex-direction: row !important; justify-content: center !important; padding: 8px 0 !important; }
+
+  /* Botones de guardar al 100% */
+  .submit-row { display: flex !important; flex-direction: column !important; gap: 8px !important; padding: 12px !important; }
+  .submit-row input, .submit-row a { width: 100% !important; text-align: center !important; padding: 12px !important; }
+}
+
+/* --- MÓVIL PEQUEÑO --- */
+@media (max-width: 600px) {
+  #header { display: flex; flex-wrap: wrap; justify-content: space-between; padding: 10px 12px; }
+  #branding h1 { font-size: 1.1rem; margin-bottom: 6px; }
+  #user-tools { font-size: 0.75rem; letter-spacing: 0; }
+  div.breadcrumbs { padding: 8px 12px; font-size: 0.8rem; }
+  
+  /* Evitar el zoom automático en iPhone al tocar un input */
+  :is(input[type="text"], input[type="email"], input[type="password"],
+      input[type="number"], input[type="tel"], input[type="search"],
+      input[type="date"], input[type="time"], textarea, select) {
+    font-size: 16px !important; 
+  }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}

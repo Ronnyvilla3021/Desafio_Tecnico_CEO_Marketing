@@ -24,7 +24,7 @@ Aplicación web para registrar, buscar y administrar clientes y prospectos. Desa
 - [x] Persistencia en base de datos (SQLite)
 - [x] Mensajes de éxito, error y validación (notificaciones *toast*)
 - [x] Administración desde Django Admin
-- [x] Diseño responsive: escritorio, tablet y móvil
+- [x] Administración desde Django Admin, con tema oscuro propio (negro y dorado) e insignias de estado
 
 ## Tecnologías
 
@@ -145,10 +145,12 @@ El workflow `.github/workflows/ci.yml` se ejecuta en cada **push** y **pull requ
 │   ├── urls.py
 │   └── views.py             # Dashboard y CRUD (respuestas JSON)
 ├── templates/
+│   ├── admin/base_site.html # Carga el tema oscuro del Django Admin
 │   ├── base.html
 │   └── clients/             # client_list.html y modales (_client_modal, _confirm_modal)
 ├── static/
-│   ├── css/styles.css       # Estilos organizados por secciones
+│   ├── css/styles.css       # Estilos del sitio, organizados por secciones
+│   ├── css/admin.css        # Tema oscuro (negro y dorado) del Django Admin
 │   └── js/app.js            # JavaScript vanilla
 ├── docs/screenshots/        # Capturas de la interfaz
 ├── .github/workflows/ci.yml # Integración continua

@@ -23,8 +23,7 @@ Aplicación web para registrar, buscar y administrar clientes y prospectos. Desa
 - [x] Dashboard con contadores animados (total, prospectos, clientes e inactivos)
 - [x] Persistencia en base de datos (SQLite)
 - [x] Mensajes de éxito, error y validación (notificaciones *toast*)
-- [x] Administración desde Django Admin
-- [x] Administración desde Django Admin, con tema oscuro propio (negro y dorado) e insignias de estado
+- [x] Administración desde Django Admin, con tema oscuro propio (negro y dorado), insignias de estado y diseño responsive
 
 ## Tecnologías
 
@@ -150,7 +149,7 @@ El workflow `.github/workflows/ci.yml` se ejecuta en cada **push** y **pull requ
 │   └── clients/             # client_list.html y modales (_client_modal, _confirm_modal)
 ├── static/
 │   ├── css/styles.css       # Estilos del sitio, organizados por secciones
-│   ├── css/admin.css        # Tema oscuro (negro y dorado) del Django Admin
+│   ├── css/admin.css        # Tema oscuro (negro y dorado) y responsive del Django Admin
 │   └── js/app.js            # JavaScript vanilla
 ├── docs/screenshots/        # Capturas de la interfaz
 ├── .github/workflows/ci.yml # Integración continua
@@ -178,12 +177,13 @@ Las operaciones POST responden en JSON: `{"ok": true, ...}` si todo sale bien, o
 - **Sin librerías de frontend.** Todo el HTML, CSS y JavaScript es propio. La única dependencia externa son las fuentes de Google Fonts (Inter y Montserrat).
 - **Diseño propio con paleta negro y dorado,** definida con variables CSS en `:root`: cambiar la paleta es editar un solo bloque.
 - **Responsive.** CSS Grid para tarjetas y formularios, Flexbox para barras y acciones. En móvil la tabla se transforma en tarjetas usando los atributos `data-label` del HTML, sin duplicar marcado, y los modales se convierten en una hoja inferior.
+- **Django Admin con tema propio.** Se personaliza solo con CSS (redefiniendo las variables de color del propio admin) y una plantilla `base_site.html` que carga el archivo; no se modifica ninguna función. El inicio se muestra como tarjetas, se adapta a tablet y móvil, y el estado de cada cliente aparece como insignia de color en el listado.
 - **`<dialog>` nativo** para los modales: maneja foco y la tecla `Esc` sin librerías.
-- **Funciona sin JavaScript.** El buscador y el filtro son un formulario GET que el backend ya procesa; el JavaScript lo mejora con filtrado en vivo (`fetch`, *debounce* de 250 ms y cancelación de peticiones con `AbortController`).
+- **La búsqueda y el filtro funcionan sin JavaScript.** Son un formulario GET que el backend ya procesa; el JavaScript lo mejora con filtrado en vivo (`fetch`, *debounce* de 250 ms y cancelación de peticiones con `AbortController`).
 - **Doble validación.** El frontend da respuesta inmediata y el backend es la fuente de verdad (por ejemplo, el correo duplicado se valida en el servidor y su error se muestra en el campo).
 - **Datos normalizados.** El correo se guarda en minúsculas y los espacios sobrantes de nombres se eliminan.
 - **Nombre y apellido separados,** con una migración de datos que conserva los clientes ya existentes.
-- **Seguridad.** Protección CSRF en todos los POST; los textos del usuario entran al DOM con `textContent`; ningún secreto está en el repositorio (variables de entorno con `.env`); el contenedor corre con un usuario sin privilegios.
+- **Seguridad.** Protección CSRF en todos los POST; Django escapa automáticamente los datos que muestran las plantillas y los mensajes de las notificaciones se insertan con `textContent`; ningún secreto está en el repositorio (variables de entorno con `.env`); el contenedor corre con un usuario sin privilegios.
 - **Accesibilidad.** HTML semántico, enlace "Saltar al contenido", etiquetas asociadas a cada campo, regiones `aria-live` para los *toast*, foco visible y respeto de `prefers-reduced-motion`.
 - **Producción en contenedor.** Gunicorn como servidor, WhiteNoise para los estáticos y SQLite en un volumen para que los datos persistan.
 

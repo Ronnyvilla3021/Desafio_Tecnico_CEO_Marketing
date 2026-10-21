@@ -8,7 +8,7 @@
    5. Botones e iconos         13. Responsive (tablet y móvil)
    6. Encabezado de página     14. Accesibilidad: movimiento reducido
    7. Tarjetas de resumen      15. Print
-   8. Panel, buscador y chips  16. Dark mode (opcional, comentado)
+   8. Panel, buscador y chips  
    ========================================================================== */
 
 
@@ -70,7 +70,7 @@
   --z-modal: 100;
   --z-toast: 200;
 
-  /* MEJORA: gradientes reutilizables */
+  /* Forma hexagonal del logo y avatares */
   --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); /* hexágono del logo */
 
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);

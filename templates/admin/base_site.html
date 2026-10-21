@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{# Tema oscuro (negro y dorado) del Django Admin. Solo agrega estilos: no cambia ninguna función. #}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><polygon points='16,1 30,8.5 30,23.5 16,31 2,23.5 2,8.5' fill='%23c9a227'/><text x='16' y='22' font-size='16' text-anchor='middle' fill='%230f0f12' font-family='sans-serif' font-weight='800'>C</text></svg>">
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}

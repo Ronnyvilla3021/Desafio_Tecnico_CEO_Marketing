@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mini CRM de clientes: registra, busca y administra clientes y prospectos.">
+  <meta name="theme-color" content="#4f46e5">
+  <title>{% block title %}Mini CRM{% endblock %} · CEO Marketing</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='23' font-size='19' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'>C</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="{% url 'clients:list' %}" aria-label="Mini CRM, ir al inicio">
+        <span class="brand__mark" aria-hidden="true">C</span>
+        <span class="brand__text">
+          <strong>Mini CRM</strong>
+          <small>CEO Marketing</small>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Principal">
+        <a href="{% url 'clients:list' %}" aria-current="page">Clientes</a>
+        <a href="{% url 'admin:index' %}">Administración</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido" class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Mini CRM de Clientes · Desafío técnico para CEO Marketing</p>
+    </div>
+  </footer>
+
+  {# Región donde el JavaScript pinta las notificaciones (toasts) #}
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="false"></div>
+
+  {# Mensajes de Django: el JS los convierte en toasts #}
+  {% if messages %}
+  <ul id="django-messages" hidden>
+    {% for message in messages %}
+    <li data-level="{{ message.level_tag }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <script src="{% static 'js/app.js' %}" defer></script>
+</body>
+</html>

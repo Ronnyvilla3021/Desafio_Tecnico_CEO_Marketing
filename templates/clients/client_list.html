@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Clientes</h1>
+    <p>Administra tus prospectos y clientes en un solo lugar.</p>
+  </div>
+  <button type="button" class="btn btn--primary" id="btn-new-client" data-action="create">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    Nuevo cliente
+  </button>
+</section>
+
+<section class="stats" aria-label="Resumen de clientes">
+  <article class="stat-card stat-card--total">
+    <h2 class="stat-card__label">Total</h2>
+    <p class="stat-card__value" data-stat="total">{{ stats.total }}</p>
+    <p class="stat-card__hint">clientes registrados</p>
+  </article>
+  <article class="stat-card stat-card--prospecto">
+    <h2 class="stat-card__label">Prospectos</h2>
+    <p class="stat-card__value" data-stat="prospects">{{ stats.prospects }}</p>
+    <p class="stat-card__hint">por convertir</p>
+  </article>
+  <article class="stat-card stat-card--cliente">
+    <h2 class="stat-card__label">Clientes</h2>
+    <p class="stat-card__value" data-stat="customers">{{ stats.customers }}</p>
+    <p class="stat-card__hint">activos</p>
+  </article>
+  <article class="stat-card stat-card--inactivo">
+    <h2 class="stat-card__label">Inactivos</h2>
+    <p class="stat-card__value" data-stat="inactive">{{ stats.inactive }}</p>
+    <p class="stat-card__hint">sin actividad</p>
+  </article>
+</section>
+
+<section class="panel" aria-labelledby="titulo-listado">
+  <h2 id="titulo-listado" class="sr-only">Listado de clientes</h2>
+
+  {# Sin JS funciona como formulario GET; con JS filtra en vivo #}
+  <form class="toolbar" id="filter-form" method="get" action="{% url 'clients:list' %}" role="search">
+    <div class="search">
+      <svg class="icon search__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <label for="search-input" class="sr-only">Buscar por nombre o empresa</label>
+      <input type="search" id="search-input" name="q" value="{{ query }}"
+             placeholder="Buscar por nombre o empresa…" autocomplete="off">
+    </div>
+
+    <fieldset class="chips">
+      <legend class="sr-only">Filtrar por estado</legend>
+      <label class="chip">
+        <input type="radio" name="status" value="" {% if not selected_status %}checked{% endif %}>
+        <span>Todos</span>
+      </label>
+      {% for value, label in statuses %}
+      <label class="chip">
+        <input type="radio" name="status" value="{{ value }}" {% if selected_status == value %}checked{% endif %}>
+        <span>{{ label }}</span>
+      </label>
+      {% endfor %}
+    </fieldset>
+
+    <noscript><button type="submit" class="btn btn--ghost">Aplicar filtros</button></noscript>
+  </form>
+
+  <p class="results-count" id="results-count" aria-live="polite">
+    Mostrando <strong>{{ clients|length }}</strong> de <strong>{{ stats.total }}</strong> clientes
+  </p>
+
+  <div class="table-wrap">
+    <table class="clients-table" id="clients-table">
+      <caption class="sr-only">Listado de clientes con nombre, empresa, correo, teléfono y estado</caption>
+      <thead>
+        <tr>
+          <th scope="col">Cliente</th>
+          <th scope="col">Empresa</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Estado</th>
+          <th scope="col" class="col-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="clients-body">
+        {% for client in clients %}
+        <tr data-client-row
+            data-id="{{ client.pk }}"
+            data-name="{{ client.name }}"
+            data-company="{{ client.company }}"
+            data-email="{{ client.email }}"
+            data-phone="{{ client.phone }}"
+            data-status="{{ client.status }}"
+            data-search="{{ client.name|lower }} {{ client.company|lower }}">
+          <td data-label="Cliente">
+            <div class="person">
+              <span class="avatar" aria-hidden="true">{{ client.name|slice:":1"|upper }}</span>
+              <span class="person__name">{{ client.name }}</span>
+            </div>
+          </td>
+          <td data-label="Empresa">{{ client.company|default:"—" }}</td>
+          <td data-label="Correo"><a class="link" href="mailto:{{ client.email }}">{{ client.email }}</a></td>
+          <td data-label="Teléfono">{{ client.phone|default:"—" }}</td>
+          <td data-label="Estado">
+            <span class="badge badge--{{ client.status }}">{{ client.get_status_display }}</span>
+          </td>
+          <td data-label="Acciones" class="col-actions">
+            <div class="row-actions">
+              <button type="button" class="icon-btn" data-action="edit"
+                      data-url="{% url 'clients:update' client.pk %}"
+                      aria-label="Editar a {{ client.name }}" title="Editar">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </button>
+              <button type="button" class="icon-btn icon-btn--danger" data-action="delete"
+                      data-url="{% url 'clients:delete' client.pk %}"
+                      aria-label="Eliminar a {{ client.name }}" title="Eliminar">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m6 6 1 14h10l1-14"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" id="empty-state" {% if clients %}hidden{% endif %}>
+    <div class="empty-state__art" aria-hidden="true">
+      <svg viewBox="0 0 64 64"><circle cx="32" cy="24" r="10"/><path d="M12 54c2-12 10-18 20-18s18 6 20 18"/></svg>
+    </div>
+    <h3>No hay clientes para mostrar</h3>
+    <p>Prueba con otra búsqueda o registra un nuevo cliente.</p>
+  </div>
+</section>
+
+{% include "clients/_client_modal.html" %}
+{% include "clients/_confirm_modal.html" %}
+{% endblock %}

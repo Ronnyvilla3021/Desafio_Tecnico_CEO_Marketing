@@ -1,0 +1,58 @@
+{# Modal para crear y editar. El JS cambia título, acción y valores. #}
+<dialog class="modal" id="client-modal" aria-labelledby="client-modal-title">
+  <form id="client-form" method="post" novalidate data-create-url="{% url 'clients:create' %}">
+    {% csrf_token %}
+
+    <header class="modal__head">
+      <h2 id="client-modal-title">Nuevo cliente</h2>
+      <button type="button" class="icon-btn" data-close-modal aria-label="Cerrar">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+
+    <div class="modal__body">
+      <p class="form-alert" id="form-alert" role="alert" hidden></p>
+
+      <div class="form-grid">
+        <div class="field field--full">
+          <label for="{{ form.name.id_for_label }}">Nombre <span class="req" aria-hidden="true">*</span></label>
+          {{ form.name }}
+          <p class="field-error" data-error-for="name" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="{{ form.company.id_for_label }}">Empresa</label>
+          {{ form.company }}
+          <p class="field-error" data-error-for="company" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="{{ form.status.id_for_label }}">Estado <span class="req" aria-hidden="true">*</span></label>
+          {{ form.status }}
+          <p class="field-error" data-error-for="status" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="{{ form.email.id_for_label }}">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+          {{ form.email }}
+          <p class="field-error" data-error-for="email" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="{{ form.phone.id_for_label }}">Teléfono</label>
+          {{ form.phone }}
+          <p class="field-hint">Solo dígitos, de 7 a 15.</p>
+          <p class="field-error" data-error-for="phone" role="alert"></p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal__foot">
+      <button type="button" class="btn btn--ghost" data-close-modal>Cancelar</button>
+      <button type="submit" class="btn btn--primary" id="client-submit">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn__label">Guardar cliente</span>
+      </button>
+    </footer>
+  </form>
+</dialog>

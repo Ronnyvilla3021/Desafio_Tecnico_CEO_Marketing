@@ -1,0 +1,19 @@
+services:
+  web:
+    build: .
+    image: mini-crm:latest
+    container_name: mini-crm
+    ports:
+      - "8000:8000"
+    environment:
+      # Compose toma estos valores de tu archivo .env; si no existe, usa los de después de ":-"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-clave-solo-para-demo-con-docker-cambiala}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-False}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      DJANGO_DB_PATH: /data/db.sqlite3
+    volumes:
+      - crm_data:/data   # la base de datos sobrevive a "docker compose down"
+    restart: unless-stopped
+
+volumes:
+  crm_data:
